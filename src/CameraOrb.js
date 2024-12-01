@@ -45,7 +45,7 @@ const CameraOrb = forwardRef(
     const materialProps = {
       transparent: true,
       opacity: clicked ? 0.8 : opacity,
-      color: hovered || clicked ? "#c02040" : color,
+      color: hovered || clicked ? "#2040c0" : color,
     };
 
     return (
