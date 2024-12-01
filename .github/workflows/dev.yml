@@ -44,12 +44,6 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Set dynamic homepage
-        run: |
-          REPO_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
-          GITHUB_USER=$(echo $GITHUB_REPOSITORY | cut -d'/' -f1)
-          npm pkg set homepage="https://$GITHUB_USER.github.io/$REPO_NAME/dev"
-
       - name: Install dependencies
         # Install all necessary npm packages
         run: npm install
@@ -58,22 +52,12 @@ jobs:
         # Build the React project for development deployment
         run: npm run build
 
-      - name: Copy public assets
-        run: |
-          mkdir -p build/model
-          cp -r public/model/* build/model/
+      - name: Disable Jekyll for GitHub Pages
+        run: echo > ./build/.nojekyll
 
-      - name: Setup Pages for Development
-        # Configure GitHub Pages for deployment
-        uses: actions/configure-pages@v5
-
-      - name: Upload build artifacts for Development
-        # Upload the build directory to be deployed to GitHub Pages
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to gh-pages/dev
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          path: "./build"
-
-      - name: Deploy Development to GitHub Pages
-        id: deployment
-        # Deploy the uploaded artifacts to GitHub Pages
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          publish_dir: ./build
+          destination_dir: dev
